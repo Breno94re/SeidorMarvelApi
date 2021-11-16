@@ -1,0 +1,33 @@
+CREATE TABLE "USER" (
+    id          STRING (255) PRIMARY KEY
+                             UNIQUE,
+    name        STRING (255),
+    email       STRING (255),
+    modified_at DATETIME,
+    created_at  DATETIME
+);
+
+CREATE TABLE USER_SESSION (
+    id         STRING PRIMARY KEY
+                      UNIQUE,
+    user_id    STRING CONSTRAINT user_id_fk REFERENCES USER (id),
+    ip_adress  STRING,
+    hash_token STRING UNIQUE
+);
+CREATE TABLE USER_API_MARVEL_CONFIG (
+    id          STRING (255) PRIMARY KEY
+                             UNIQUE
+                             NOT NULL,
+    user_id     STRING (255) CONSTRAINT user_id_api_marvel_fk REFERENCES USER (id) 
+                             NOT NULL,
+    private_key STRING (255) UNIQUE
+                             NOT NULL,
+    public_key  STRING (255) NOT NULL
+                             UNIQUE,
+    salt        STRING (255) UNIQUE
+                             NOT NULL
+);
+
+
+
+
