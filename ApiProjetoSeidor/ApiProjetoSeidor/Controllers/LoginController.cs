@@ -23,8 +23,6 @@ namespace ApiProjetoSeidor.Controllers
             loginBusiness_ = new LoginBusiness();
         }
 
-
-
         /// <summary>
         /// Login into application with valid account
         /// </summary>

@@ -123,6 +123,7 @@ namespace ApiProjetoSeidor.Controllers
         ///     GET /api/marvel/hero/{name}/{token}
         /// </remarks>
         /// 
+
         [ProducesResponseType(typeof(MarvelPayload), 200)]
         [Route("v1/hero/{name}/{token}")]
         [HttpGet]
