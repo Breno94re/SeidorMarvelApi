@@ -9,10 +9,10 @@ This project was made for Seidor interview challenge, following their "interview
 - Dotnet Class libs 
 - Backend Nuget Dependencies:
 
-1 - Microsoft.Data.Sqlite v3.1.20
-2 - SQLitePCLRaw.bundle_winsqlite3 v2.0.7
-3 - Microsoft.VisualStudio.Azure.Containers.Tools.Targets v1.10.14
-4 - Swashbuckle.AspNetCore v6.2.3
+- Microsoft.Data.Sqlite v3.1.20
+- SQLitePCLRaw.bundle_winsqlite3 v2.0.7
+- Microsoft.VisualStudio.Azure.Containers.Tools.Targets v1.10.14
+- Swashbuckle.AspNetCore v6.2.3
 
 For routes and how to use, please check "swagger/index.html". All routes are mapped on swagger.
 
@@ -22,6 +22,7 @@ For routes and how to use, please check "swagger/index.html". All routes are map
 ############################ BACK-END ############################
 
 ############################ FRONT-END ############################
+
 - Angular v13.0.2
 - rxjs v7.4.0
 - node 16.13.0
