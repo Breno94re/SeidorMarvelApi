@@ -148,5 +148,88 @@ namespace ApiProjetoSeidor.Controllers
             }
         }
 
+        /// <summary>
+        /// Gets marvel's series by name
+        /// </summary>
+        /// <response code="200">returns marvel payload with data found</response>
+        /// <response code="400">BadRequest, validation errors, missing expected fields</response>
+        /// <response code="401">Unauthorized, invalid access token or invalid marvel keys</response>
+        /// <response code="500">Critical Unexpected Error</response>
+        /// /// <remarks>
+        /// Exemple:
+        ///
+        ///     GET /api/marvel/series/{name}
+        /// </remarks>
+        /// 
+
+        [ProducesResponseType(typeof(MarvelPayload), 200)]
+        [Route("v1/series/{name}")]
+        [HttpGet]
+        public IActionResult GetSeriesByName(string name)
+        {
+            try
+            {
+                string token = HttpContext.Request.Headers["AUTHORIZATION"];
+
+                marvelApiBusiness_ = new MarvelApiBusiness(token);
+
+                Package package = marvelApiBusiness_.GetSeriesByName(name);
+
+                return StatusCode(package.HttpCode, package);
+
+            }
+            catch (UnauthorizedConnection j)
+            {
+                return Unauthorized();
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, e.Message);
+            }
+        }
+
+        /// <summary>
+        /// Gets marvel's series by name, with token within the url
+        /// </summary>
+        /// <returns>
+        /// 
+        /// ok
+        /// 
+        /// </returns>
+        /// <response code="200">returns marvel payload with data found</response>
+        /// <response code="400">BadRequest, validation errors, missing expected fields</response>
+        /// <response code="401">Unauthorized, invalid access token or invalid marvel keys</response>
+        /// <response code="500">Critical Unexpected Error</response>
+        /// /// <remarks>
+        /// Exemple:
+        ///
+        ///     GET /api/marvel/hero/{name}/{token}
+        /// </remarks>
+        /// 
+
+        [ProducesResponseType(typeof(MarvelPayload), 200)]
+        [Route("v1/series/{name}/{token}")]
+        [HttpGet]
+        public IActionResult GetSeriesByName(string name, string token)
+        {
+            try
+            {
+                marvelApiBusiness_ = new MarvelApiBusiness(token);
+
+                Package package = marvelApiBusiness_.GetSeriesByName(name);
+
+                return StatusCode(package.HttpCode, package);
+
+            }
+            catch (UnauthorizedConnection j)
+            {
+                return Unauthorized();
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, e.Message);
+            }
+        }
+
     }
 }
