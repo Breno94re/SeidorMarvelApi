@@ -1,4 +1,5 @@
 ﻿using Connection;
+using Logger;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -15,6 +16,8 @@ namespace MarvelApi
         private Repository repository;
         private Package package;
         private HttpWebRequest httpWebRequest;
+        private LoggerBusiness logger;
+
 
         public MarvelApiBusiness(string token)
         {
@@ -23,6 +26,7 @@ namespace MarvelApi
                 package = new Package();
                 connection = new ConnectionBase(token);
                 repository = new Repository(connection);
+                logger = new LoggerBusiness(connection);
             }
             catch (ConnectionException)
             {
@@ -128,7 +132,24 @@ namespace MarvelApi
                     return package;
                 }
 
+                connection.OpenTransaction();
+
+                if(!logger.LogMarvelQuery(new Log() { Character = name,Series="", Id = Guid.NewGuid().ToString()}))
+                {
+                    package.Notifications.Add(new Notifications()
+                    {
+                        Title = "Unexpected error",
+                        Message = "We couldn't log your action"
+                    });
+
+                    package.SetBadRequest();
+
+                    return package;
+                }
+
                 package.Data = marvelPayload.data;
+
+                connection.CommitTransaction();
 
                 package.SetOk();
 
@@ -191,6 +212,23 @@ namespace MarvelApi
 
                     return package;
                 }
+
+                connection.OpenTransaction();
+
+                if (!logger.LogMarvelQuery(new Log() { Character = "",Series = name, Id = Guid.NewGuid().ToString() }))
+                {
+                    package.Notifications.Add(new Notifications()
+                    {
+                        Title = "Unexpected error",
+                        Message = "We couldn't log your action"
+                    });
+
+                    package.SetBadRequest();
+
+                    return package;
+                }
+
+                connection.CommitTransaction();
 
                 package.Data = marvelPayload.data;
 

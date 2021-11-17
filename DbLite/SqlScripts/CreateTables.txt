@@ -14,6 +14,7 @@ CREATE TABLE USER_SESSION (
     ip_adress  STRING,
     hash_token STRING UNIQUE
 );
+
 CREATE TABLE USER_API_MARVEL_CONFIG (
     id          STRING (255) PRIMARY KEY
                              UNIQUE
@@ -27,6 +28,16 @@ CREATE TABLE USER_API_MARVEL_CONFIG (
     salt        STRING (255) UNIQUE
                              NOT NULL
 );
+
+CREATE TABLE LOG (
+    id         STRING (255) PRIMARY KEY
+                            UNIQUE,
+    user_id    STRING (255) CONSTRAINT user_id_log_fk REFERENCES USER (id),
+    series     STRING (255),
+    character  STRING (255),
+    created_at STRING (255) 
+);
+
 
 
 

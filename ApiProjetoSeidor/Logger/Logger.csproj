@@ -5,7 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\ApiProjetoSeidor\Logger\Logger.csproj" />
     <ProjectReference Include="..\..\Connection\Connection\Connection.csproj" />
     <ProjectReference Include="..\..\Utility\Utility\Utility.csproj" />
   </ItemGroup>
