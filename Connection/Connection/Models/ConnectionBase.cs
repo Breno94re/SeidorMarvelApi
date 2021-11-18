@@ -42,6 +42,12 @@ namespace Connection
         {
             try
             {
+
+                if(string.IsNullOrEmpty(token))
+                {
+                    throw new UnauthorizedConnection("");
+                }
+
                 repository = new Repository(this);
 
                 sqliteConnection.Open();

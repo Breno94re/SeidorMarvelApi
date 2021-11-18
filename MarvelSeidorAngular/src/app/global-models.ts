@@ -20,5 +20,16 @@ export class Package {
     public data: any = {};
     public notifications: any ={}
 }
+
+export class ApiConfig {
+    public privateKey: string = "";
+    public publicKey: string = "";
+}
    
+export class Comics {
+    public resourceURI: string = "";
+    public name: string = "";
+}
+   
+
    

@@ -26,6 +26,20 @@ namespace Login
             }
         }
 
+        public LoginBusiness(string token)
+        {
+            try
+            {
+                package = new Package();
+                connection = new ConnectionBase(token);
+                repository = new Repository(connection);
+            }
+            catch (ConnectionException)
+            {
+                throw;
+            }
+        }
+
         public Package Login(LoginAuth login)
         {
             try
@@ -173,6 +187,23 @@ namespace Login
         }
 
 
+        public Package ValidateToken()
+        {
+            try
+            {
+                Package package = new Package();
+
+                package.SetOk();
+
+                return package;
+
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+        }
 
     }
 }

@@ -66,6 +66,48 @@ namespace ApiProjetoSeidor.Controllers
 
 
         /// <summary>
+        /// Gets Api Config By user logged
+        /// </summary>
+        /// <response code="200">returns Apiconfig with data found</response>
+        /// <response code="400">BadRequest, validation errors, missing expected fields</response>
+        /// <response code="401">Unauthorized, invalid access token or invalid marvel keys</response>
+        /// <response code="500">Critical Unexpected Error</response>
+        /// /// <remarks>
+        /// Exemple:
+        ///
+        ///     GET /api/marvel/config
+        /// </remarks>
+        /// 
+
+        [ProducesResponseType(typeof(MarvelApiConfiguration), 200)]
+        [Route("v1/config")]
+        [HttpGet]
+        public IActionResult GetApiConfigByUser()
+        {
+            try
+            {
+                string token = HttpContext.Request.Headers["AUTHORIZATION"];
+
+                marvelApiBusiness_ = new MarvelApiBusiness(token);
+
+                Package package = marvelApiBusiness_.GetApiConfig();
+
+                return StatusCode(package.HttpCode, package);
+
+            }
+            catch (UnauthorizedConnection j)
+            {
+                return Unauthorized();
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, e.Message);
+            }
+        }
+
+
+
+        /// <summary>
         /// Gets marvel's hero by name
         /// </summary>
         /// <response code="200">returns marvel payload with data found</response>

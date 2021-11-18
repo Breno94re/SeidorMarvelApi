@@ -113,7 +113,46 @@ namespace ApiProjetoSeidor.Controllers
             }
         }
 
-       
+
+        /// <summary>
+        /// Validates user token
+        /// </summary>
+        /// <returns>Ok</returns>
+        /// <response code="200">Sucessful validation</response>
+        /// <response code="401">Unauthorized</response>
+        /// <response code="500">Critical Unexpected Error</response>
+        /// /// <remarks>
+        /// Exemple:
+        ///
+        ///     get /api/validate/{token}
+        ///
+        /// </remarks>
+        /// 
+
+        [Route("v1/validate/{token}")]
+        [HttpGet]
+        public IActionResult ValidateToken(string token)
+        {
+            try
+            {
+                loginBusiness_ = new LoginBusiness(token);
+
+                Package package = loginBusiness_.ValidateToken();
+
+                return StatusCode(package.HttpCode, package);
+
+            }
+            catch (UnauthorizedConnection j)
+            {
+                return Unauthorized();
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, e.Message);
+            }
+        }
+
+
 
     }
 

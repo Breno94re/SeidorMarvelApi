@@ -19,7 +19,7 @@ namespace MarvelApi
         private LoggerBusiness logger;
 
 
-        public MarvelApiBusiness(string token)
+         public MarvelApiBusiness(string token)
         {
             try
             {
@@ -52,22 +52,91 @@ namespace MarvelApi
 
                 connection.OpenConnection();
 
-                connection.OpenTransaction();
 
-                if (!repository.CreateNewMarvelApiConfig(marvelApiConfiguration))
+
+                if (repository.GetApiConfiguration() == null)
+                {
+                    connection.OpenTransaction();
+
+                    if (!repository.CreateNewMarvelApiConfig(marvelApiConfiguration))
+                    {
+                        package.Notifications.Add(new Notifications()
+                        {
+                            Title = "Unexpected Error",
+                            Message = "unfortunately we got some unexpected error"
+                        });
+
+                        package.SetBadRequest();
+
+                        return package;
+                    }
+                }
+                else
+                {
+
+                    connection.OpenTransaction();
+
+                    if (!repository.UpdateExistingApiConfig(marvelApiConfiguration))
+                    {
+                        package.Notifications.Add(new Notifications()
+                        {
+                            Title = "Unexpected Error",
+                            Message = "unfortunately we got some unexpected error"
+                        });
+
+                        package.SetBadRequest();
+
+                        return package;
+                    }
+                }
+
+                connection.CommitTransaction();
+
+                package.SetOk();
+
+                return package;
+
+            }
+            catch (Exception)
+            {
+                if (connection.HasTransaction())
+                {
+                    connection.RollbackTransaction();
+                }
+
+                throw;
+            }
+            finally
+            {
+                if (package.HasNotifications() && connection.HasTransaction())
+                {
+                    connection.RollbackTransaction();
+                }
+
+                connection.CloseConnection();
+            }
+        }
+
+        public Package GetApiConfig()
+        {
+            try
+            {
+                connection.OpenConnection();
+
+                package.Data = repository.GetApiConfigurationSafe();
+
+                if (package.Data == null)
                 {
                     package.Notifications.Add(new Notifications()
                     {
-                        Title = "Unexpected Error",
-                        Message = "unfortunately we got some unexpected error"
+                        Title = "Not Found",
+                        Message = "No Marvel Api configuration for this user was found"
                     });
 
                     package.SetBadRequest();
 
                     return package;
                 }
-
-                connection.CommitTransaction();
 
                 package.SetOk();
 
@@ -119,7 +188,7 @@ namespace MarvelApi
 
                 MarvelPayload marvelPayload = MarvelApiGetRequest($"characters?name={name}&ts={marvelApiConfiguration.Salt.ToLower()}&apikey={marvelApiConfiguration.PublicKey}&hash={marvelApiConfiguration.Md5.ToLower()}");
 
-                if(marvelPayload==null)
+                if (marvelPayload == null)
                 {
                     package.Notifications.Add(new Notifications()
                     {
@@ -134,7 +203,7 @@ namespace MarvelApi
 
                 connection.OpenTransaction();
 
-                if(!logger.LogMarvelQuery(new Log() { Character = name,Series="", Id = Guid.NewGuid().ToString()}))
+                if (!logger.LogMarvelQuery(new Log() { Character = name, Series = "", Id = Guid.NewGuid().ToString() }))
                 {
                     package.Notifications.Add(new Notifications()
                     {
@@ -215,7 +284,7 @@ namespace MarvelApi
 
                 connection.OpenTransaction();
 
-                if (!logger.LogMarvelQuery(new Log() { Character = "",Series = name, Id = Guid.NewGuid().ToString() }))
+                if (!logger.LogMarvelQuery(new Log() { Character = "", Series = name, Id = Guid.NewGuid().ToString() }))
                 {
                     package.Notifications.Add(new Notifications()
                     {

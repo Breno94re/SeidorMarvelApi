@@ -1,7 +1,189 @@
-<body style="background-color:#f7f2f2;position:absolute;width: 100%;height:100%;top: -8px;left: -8px;">
-    <div style="font-family: 'Roboto Bold', 'Trebuchet MS', Helvetica, Arial, sans-serif;"></div>
-      
+<body style="background-color:#000000;position:absolute;width: 100%;height:100%;top: 0px;left: 0px;">
 
+
+    <div class="wrapper" style="height:100%;">
+        
+        <nav id="sidebar" >
+            <div class="sidebar-header">
+                <h3>Seidor Marvel's</h3>
+            </div>
+
+            <ul class="list-unstyled components" >
+                <p></p>
+
+                <li>
+                    <a aria-expanded="false" (click) = "Comics()">Series</a>
+                </li>
+
+                <li>
+                    <a aria-expanded="false" (click) = "Series()">Characters</a>
+                </li>
+
+                <li>
+                    <a aria-expanded="false" (click) = "Config()" >Config</a>
+                </li>
+
+                <li>
+                    <a (click) = "About()">About</a>
+                </li>
+
+                <li>
+                    <a (click) = "LogOut()" >Log Out</a>
+                </li>
+            </ul>
+
+           
+        </nav>
+
+        <div style="left: 45%;padding-top: 15%; position: absolute; width: 500px;" [ngStyle]="{'visibility':ShowAbout  ? 'visible' : 'hidden' }" >
+           
+            <div class="form-group" style="padding-bottom: 15%; padding-top: -10%;">
+
+                <h2 for="exampleInputEmail1" style="color: white ;text-align: center;" >About this website</h2>
+                <p style="color: white ;" >This website was made for a job interview challange at Seidor's enterprise.</p>
+                <p style="color: white ;" >The challange consists in making an website with agular 7+ and dotnet core 2+ api with sqlite.</p>
+                <p  style="color: white ;">If your want to know more, access my git project here: https://github.com/Breno94re/SeidorMarvelApi</p>
+
+            </div>
+                
+            
+        </div>
+
+        <div style="left: 45%;padding-top: 5%; position: absolute; width: 500px; top: 10px;" [ngStyle]="{'visibility':ShowSeries  ? 'visible' : 'hidden' }" >
+           
+            <div class="form-group" style="padding-bottom: 15%; top: 20px;">
+                <h2 for="exampleInputEmail1" style="color: white ;" >Marvel Characters Search</h2>
+                <small id="emailHelp" class="form-text text-muted" style="color: white ;" >Here you can find any marvel character by name</small>
+            </div>
+
+            <div class="form-group" style="width: 500px; position: absolute; left: -90px; top:180px">
+                <label for="exampleInputPassword1" style="color: white ;" ></label>
+                <input [(ngModel)]="HeroName" type="text" class="form-control" placeholder="Character Name, ex: Hulk">
+                <button style="position: absolute; left: 510px;top:24px" type="submit" class="btn btn-primary" (click) = "SubmitCharacterSearch()" >Submit</button>
+            </div>
+
+            <div class="form-group" style="padding-bottom: 15%; top: 300px; position: absolute; left: -400px;overflow-y:scroll;height:600px;width: 1100px;">
+
+                <div class="form-group" *ngFor ="let list of listHeroes" style="padding-bottom: 15%; padding-top: -10%; width: 800px;">
+                   
+                        <div class="card" style="width: 10rem;">
+                            <img src="{{list.thumbnail.path}}/portrait_xlarge.{{list.thumbnail.extension}}" class="card-img-top" alt="...">
+                            <div class="card-body">
+                                <h6 class="card-title">{{list.name}}</h6>
+                                <small class="card-text">{{list.description}}</small>
+                            </div>
+                        
+                        </div>
+
+                        <div>
+                            <table class="table table-dark table-borderless" style="position:absolute;top:0px;left: 250px; width: 800px;">
+                                <thead style="background-color: #000000;">
+                                    <tr> 
+                                
+                                        <th style="background-color: #0c0c0c;width: 200px;">Thumbnail</th>
+                                        <th style="background-color: #0c0c0c;width: 200px;">Comic Name</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                <tr *ngFor ="let comic of list.comics.items" style="padding-bottom: 20px;">
+                                    <td><img src="{{list.thumbnail.path}}/portrait_small.{{list.thumbnail.extension}}"></td>
+                                    <td>"{{comic.name}}"</td>
+                                </tr>
+                                </tbody>
+                                
+                            </table>
+                        </div>
+                    
+                </div>
+
+
+            </div>
+
+        </div>
+
+
+
+        
+        <div style="left: 45%;padding-top: 5%; position: absolute; width: 500px; top: 10px;" [ngStyle]="{'visibility':ShowHome  ? 'visible' : 'hidden' }" >
+           
+            <div class="form-group" style="padding-bottom: 15%; top: 20px;">
+                <h2 for="exampleInputEmail1" style="color: white ;" >Marvel Series Search</h2>
+                <small id="emailHelp" class="form-text text-muted" style="color: white ;" >Here you can find any marvel series of comics by name</small>
+            </div>
+
+            <div class="form-group" style="width: 500px; position: absolute; left: -90px; top:180px">
+                <label for="exampleInputPassword1" style="color: white ;" ></label>
+                <input [(ngModel)]="ComicName" type="text" class="form-control" placeholder="Series name, ex: Avengers">
+                <button style="position: absolute; left: 510px;top:24px" type="submit" class="btn btn-primary" (click) = "SubmitComicSearch()" >Submit</button>
+            </div>
+
+            <div class="form-group" style="padding-bottom: 15%; top: 300px; position: absolute; left: -400px;overflow-y:scroll;height:600px;width: 1100px;">
+
+                <div class="form-group" *ngFor ="let list of listComics" style="padding-bottom: 15%; padding-top: 30px; width: 800px; position: relative;">
+                   
+                        <div class="card" style="width: 10rem;">
+                            <img src="{{list.thumbnail.path}}/portrait_xlarge.{{list.thumbnail.extension}}" class="card-img-top" alt="...">
+                            <div class="card-body">
+                                <h6 class="card-title">{{ComicNameFixed}}</h6>
+                                <small class="card-text">{{list.description}}</small>
+                            </div>
+                        
+                        </div>
+
+                        <div>
+                            <table class="table table-dark table-borderless" style=" position:absolute;top:0px;left: 250px; width: 800px;">
+                                <thead style="background-color: #000000;">
+                                    <tr> 
+                                
+                                        <th style="background-color: #0c0c0c;width: 200px;">Thumbnail</th>
+                                        <th style="background-color: #0c0c0c;width: 200px;">Comic Name</th>
+                                    </tr>
+                                </thead>
+                                <tbody >
+                                <tr *ngFor ="let comic of list.comics.items" style="padding-bottom: 20px;">
+                                    <td><img src="{{list.thumbnail.path}}/portrait_small.{{list.thumbnail.extension}}"></td>
+                                    <td>"{{comic.name}}"</td>
+                                </tr>
+                                </tbody>
+                                
+                            </table>
+                        </div>
+                    
+                </div>
+
+
+            </div>
+
+        </div>
+
+
+   
+
+        <div style="left: 40%;padding-top: 6%;position: absolute;" [ngStyle]="{'visibility':ShowConfig  ? 'visible' : 'hidden' }" >
+           
+
+            <div class="form-group" style="padding-bottom: 15%; padding-top: -10%;">
+                <h2 for="exampleInputEmail1" style="color: white ;" >Marvel Api Configuration</h2>
+                <small id="emailHelp" class="form-text text-muted" style="color: white ;" >Here you can configure your private and public keys for Marvel-api calls</small>
+            </div>
+            <div class="form-group" style="width: 600px;">
+                <label for="exampleInputEmail1" style="color: white ;" >Api PrivateKey</label>
+                <input [(ngModel)]="apiConfig.privateKey" type="text" class="form-control" aria-describedby="emailHelp" placeholder="Private Key">
+                <small id="emailHelp" class="form-text text-muted" style="color: white ;" >We'll never share your private key with anyone.</small>
+            </div>
+            <div class="form-group" style="width: 600px;">
+                <label for="exampleInputPassword1" style="color: white ;" >Api PublicKey</label>
+                <input [(ngModel)]="apiConfig.publicKey" type="text" class="form-control" placeholder="Public Key">
+            </div>
+            <div class="form-group form-check">
+
+            </div>
+                <button type="submit" class="btn btn-primary" (click) = "SubmitApiConfig()" >Submit</button>
+            </div>
+        
+        </div>
+     
+
+</body>
     
     
-    </body>

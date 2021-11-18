@@ -14,7 +14,7 @@ namespace MarvelApi
         {
             this.connection = connection;
         }
-
+        
 
         internal MarvelApiConfiguration GetApiConfiguration()
         {
@@ -45,6 +45,66 @@ namespace MarvelApi
                             return null;
                         }
                     }
+                }
+            }
+            catch (SqliteException)
+            {
+                throw;
+            }
+        }
+
+        internal MarvelApiConfiguration GetApiConfigurationSafe()
+        {
+            try
+            {
+                string query = @"SELECT ID,USER_ID,PRIVATE_KEY,PUBLIC_KEY,SALT,MODIFIED_AT,CREATED_AT FROM USER_API_MARVEL_CONFIG WHERE USER_ID = @USER_ID";
+
+                using (SqliteCommand sqliteCommand = new SqliteCommand(query, connection.GetConnection()))
+                {
+                    sqliteCommand.Parameters.AddWithValue("@USER_ID", connection.userData.Id);
+
+                    using (SqliteDataReader sqliteDataReader = sqliteCommand.ExecuteReader())
+                    {
+                        if (sqliteDataReader.Read())
+                        {
+                            return new MarvelApiConfiguration()
+                            {
+                                PrivateKey = sqliteDataReader["private_key"].ToString(),
+                                PublicKey = sqliteDataReader["public_key"].ToString(),
+
+                            };
+
+                        }
+                        else
+                        {
+                            return null;
+                        }
+                    }
+                }
+            }
+            catch (SqliteException)
+            {
+                throw;
+            }
+        }
+
+        internal bool UpdateExistingApiConfig(MarvelApiConfiguration marvelApiConfiguration)
+        {
+            try
+            {
+                string query = @"UPDATE USER_API_MARVEL_CONFIG SET PRIVATE_KEY = @PRIVATE_KEY,
+                PUBLIC_KEY = @PUBLIC_KEY,SALT = @SALT,MODIFIED_AT = @MODIFIED_AT WHERE USER_ID = @USER_ID";
+
+                using (SqliteCommand sqliteCommand = new SqliteCommand(query, connection.GetConnection(), connection.GetTransaction()))
+                {
+                    sqliteCommand.Parameters.AddWithValue("@USER_ID", connection.userData.Id);
+                    sqliteCommand.Parameters.AddWithValue("@PRIVATE_KEY", marvelApiConfiguration.PrivateKey);
+                    sqliteCommand.Parameters.AddWithValue("@PUBLIC_KEY", marvelApiConfiguration.PublicKey);
+                    sqliteCommand.Parameters.AddWithValue("@SALT", marvelApiConfiguration.Salt);
+                    sqliteCommand.Parameters.AddWithValue("@MODIFIED_AT", DateTime.Now);
+                    sqliteCommand.Parameters.AddWithValue("@CREATED_AT", DateTime.Now);
+
+                    return sqliteCommand.ExecuteNonQuery() > 0;
                 }
             }
             catch (SqliteException)
