@@ -105,7 +105,9 @@ namespace Connection
         {
             try
             {
-                sqliteConnection = new SqliteConnection(@"Data Source=C:\Users\BrenoAlmeida\Desktop\ProjetoSeidor\DbLite\SeidorMarvelDb.db;");
+                string path = @$"Data Source={AppDomain.CurrentDomain.BaseDirectory.Replace(@"\ApiProjetoSeidor\ApiProjetoSeidor\bin\Debug\netcoreapp3.1\", "")}\DbLite\SeidorMarvelDb.db";
+                sqliteConnection = new SqliteConnection(path);
+
                 SQLitePCL.Batteries_V2.Init();
             }
             catch (SqliteException)
